@@ -1,12 +1,15 @@
 import React from "react";
 import { LuBot, LuSendHorizontal } from "react-icons/lu";
 import useChatbot from "../../hooks/useBotChat";
+import Markdown from "react-markdown";
+import useChatScroll from "../../hooks/useChatScroll";
 
 interface ChatComponentProps {}
 
 const ChatComponent: React.FC = (props: Props) => {
   const [input, setInput] = React.useState<string>("");
   const { messages, sendMessage } = useChatbot();
+  const ref = useChatScroll(messages);
 
   const handleSendMessage = () => {
     if (input.trim() !== "") {
@@ -20,7 +23,7 @@ const ChatComponent: React.FC = (props: Props) => {
       <h2 className="p-4 font-semibold text-center text-lg bg-blue-100 flex text-blue-800 justify-center items-center gap-2">
         React + OpenAI Chatbot <LuBot size={20} />
       </h2>
-      <div className="flex-1 overflow-y-auto p-4 space-y-2">
+      <div ref={ref} className="flex-1 overflow-y-auto p-4 space-y-2">
         {messages.map((message, index) => (
           <div
             key={index}
@@ -30,7 +33,7 @@ const ChatComponent: React.FC = (props: Props) => {
                 : "bg-gray-300 text-gray-800"
             }`}
           >
-            {message.text}
+            <Markdown>{message.text}</Markdown>
           </div>
         ))}
       </div>
